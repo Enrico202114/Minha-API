@@ -1,8 +1,10 @@
-import express, { Router } from 'express';
+const express = require('express');
 const router = express.Router();
 
-router.get ('/', (req, res) => {
-    res.json({ message: `Rota de plantas funcionado🌱`});
-});
+import plantController from('../controller/plantController');
+
+router.get('plants/', plantController.getAll);
+router.post('/plants/', plantController.create);
+router.delete('/plants/:id', plantController.remove);
 
 export default router;
