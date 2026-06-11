@@ -1,10 +1,13 @@
-const express = require('express');
+import express from 'express';
+
+import * as plantController from '../controller/plantController.js';
+
 const router = express.Router();
 
-import plantController from('../controller/plantController');
+router.get('/', plantController.getAll);
 
-router.get('plants/', plantController.getAll);
-router.post('/plants/', plantController.create);
-router.delete('/plants/:id', plantController.remove);
+router.post('/', plantController.create);
+
+router.delete('/:id', plantController.remove);
 
 export default router;

@@ -1,34 +1,47 @@
-const connection = require('../config/db');
+import db from '../config/db.js';
+export const getAll = async () => {
 
-const getAll = async () => {
-    cont [plants] =await connection.execute(
-        'select  * from plants'
+    const query = `
+        SELECT * FROM plantas
+        ORDER BY id_plantas;
+    `;
+
+    const result = await db.query(query);
+
+    return result.rows;
+};
+
+export const create = async (
+    nome,
+    preco,
+    quantidade,
+    id_tipos
+) => {
+
+    const query = `
+        INSERT INTO plantas
+        (nome, preco, quantidade, id_tipos)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;
+    `;
+
+    const values = [
+        nome,
+        preco,
+        quantidade,
+        id_tipos
+    ];
+
+    const result = await db.query(query, values);
+
+    return result.rows[0];
+};
+
+export const remove = async (id) => {
+ const result = await pool.query(
+        'DELETE FROM plantas WHERE id_plantas = $1 RETURNING *',
+        
+        [id]
     );
-
-    return plants;
+    return result.rows[0];
 };
-
-const create = async (plants) => {
-    const {name} = plants;
-
-    const query ='insert into plants (name) values (?)';
-
-    const [createdPlant] = await connection.execute(
-        query,
-        [name]
-    );
-
-    return createdPlant;
-};
-
-const remove = async (id) => {
-    const query = 'delete from plants where id =?';
-
-    await connection.execute(query, [id]);
-};
-
-export {
-    getAll,
-    create,
-    remove
-}
