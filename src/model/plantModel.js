@@ -1,12 +1,10 @@
-import db from '../config/db.js';
+import pool from '../config/db.js';
+
 export const getAll = async () => {
 
-    const query = `
-        SELECT * FROM plantas
-        ORDER BY id_plantas;
-    `;
+    const query = `SELECT * FROM plants ORDER BY id_plantas;`    ;
 
-    const result = await db.query(query);
+    const result = await pool.query(query);
 
     return result.rows;
 };
@@ -19,7 +17,7 @@ export const create = async (
 ) => {
 
     const query = `
-        INSERT INTO plantas
+        INSERT INTO plants
         (nome, preco, quantidade, id_tipos)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
@@ -32,16 +30,22 @@ export const create = async (
         id_tipos
     ];
 
-    const result = await db.query(query, values);
+    const result = await pool.query(query, values);
 
     return result.rows[0];
 };
 
 export const remove = async (id) => {
  const result = await pool.query(
-        'DELETE FROM plantas WHERE id_plantas = $1 RETURNING *',
+        'DELETE FROM plants WHERE id_plantas = $1 RETURNING *',
         
         [id]
     );
     return result.rows[0];
+};
+
+export default {
+    getAll,
+    create,
+    remove
 };

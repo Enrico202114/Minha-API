@@ -1,4 +1,4 @@
-import * as plantModel from '../model/plantModel.js';
+import plantModel from '../model/plantModel.js';
 
 export const getAll = async (req, res) => {
     try {
