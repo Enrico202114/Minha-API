@@ -59,3 +59,17 @@ export const remove = async (req, res) => {
         });
     }
 };
+
+export const getById = async (req, res) => {
+    const plant = await plantModel.getById(
+        req.params.id
+    );
+
+    if (!plant) {
+        return res.status(404).json({
+            message: 'Planta não encontrada'
+        });
+    }
+
+    res.status(200).json(plant);
+};
