@@ -1,13 +1,13 @@
- import pkg from 'pg' ;
+import pkg from 'pg';
 
- const{Pool} = pkg;
+const { Pool } = pkg;
 
- const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'JardimSecreto',
-    password: '1234',
-    port: 5432,
- });
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'JardimSecreto',
+  password: '123',
+  port: 5432,
+});
 
- export default pool;
+export default pool;

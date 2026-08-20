@@ -1,75 +1,53 @@
-import plantModel from '../model/plantModel.js';
+import plantModel from "../model/plantModel.js";
 
-export const getAll = async (req, res) => {
-    try {
-
-        const plantas = await plantModel.getAll();
-
-        return res.status(200).json(plantas);
-
-    } catch (error) {
-
-        console.log(error);
-
-        return res.status(500).json({
-            erro: 'Erro ao buscar plantas'
-        });
-    }
+const getAll = async (req, res) => {
+  const plants = await plantModel.getAll();
+  res.json(plants);
 };
 
-export const create = async (req, res) => {
-    try {
-
-        const { nome, preco, quantidade, id_tipos } = req.body;
-
-        const planta = await plantModel.create(
-            nome,
-            preco,
-            quantidade,
-            id_tipos
-        );
-
-        return res.status(201).json(planta);
-
-    } catch (error) {
-
-        console.log(error);
-
-        return res.status(500).json({
-            erro: 'Erro ao criar planta'
-        });
-    }
+const create = async (req, res) => {
+  const { nome, preco, quantidade, id_tipos } = req.body;
+  if (!nome || !preco || !quantidade || !id_tipos) {
+    return res.status(400).json({
+      message: "Todos os campos são obrigatórios",
+    });
+  }
+  const newPlant = await plantModel.create(nome, preco, quantidade, id_tipos);
+  res.status(201).json(newPlant);
 };
 
-export const remove = async (req, res) => {
-    try {
+const remove = async (req, res) => {
+  const deletedPlant = await plantModel.remove(req.params.id);
 
-        const { id } = req.params;
-
-        const plantaRemovida = await plantModel.remove(id);
-
-        return res.status(200).json(plantaRemovida);
-
-    } catch (error) {
-
-        console.log(error);
-
-        return res.status(500).json({
-            erro: 'Erro ao remover planta'
-        });
-    }
+  if (!deletedPlant) {
+    return res.status(404).json({
+      message: "Planta não encontrado",
+    });
+  }
+  res.status(200).json({
+    message: "Planta deletada com sucesso",
+    deletedPlant,
+  });
 };
 
-export const getById = async (req, res) => {
-    const plant = await plantModel.getById(
-        req.params.id
-    );
+const getById = async (req, res) => {
 
-    if (!plant) {
-        return res.status(404).json({
-            message: 'Planta não encontrada'
-        });
-    }
+  const plant = await plantModel.getById(
+    req.params.id
+  );
 
-    res.status(200).json(plant);
+  if (!plant) {
+    return res.status(404).json({
+      message: 'Planta não encontrada'
+    });
+  }
+
+  res.status(200).json(plant);
+};
+
+export default {
+  getAll,
+  create,
+  remove,
+  getById
 };

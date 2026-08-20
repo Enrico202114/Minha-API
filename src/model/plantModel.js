@@ -1,51 +1,43 @@
 import pool from '../config/db.js';
 
-export const getAll = async () => {
+const getAll = async () => {
 
-    const query = `SELECT * FROM plants ORDER BY id_plantas;`    ;
-
-    const result = await pool.query(query);
-
-    return result.rows;
+  const result = await pool.query(
+    'SELECT * FROM plantas'
+  );
+  return result.rows;
 };
 
-export const create = async (
-    nome,
-    preco,
-    quantidade,
-    id_tipos
-) => {
+const create = async (nome, preco, quantidade, id_tipos) => {
 
-    const query = `
-        INSERT INTO plants
-        (nome, preco, quantidade, id_tipos)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;
-    `;
-
-    const values = [
-        nome,
-        preco,
-        quantidade,
-        id_tipos
-    ];
-
-    const result = await pool.query(query, values);
-
-    return result.rows[0];
+  const result = await pool.query(
+    'INSERT INTO plantas (nome, preco, quantidade, id_tipos) VALUES ($1, $2, $3, $4) RETURNING *',
+    [nome, preco, quantidade, id_tipos]
+  );
+  return result.rows[0];
 };
 
-export const remove = async (id) => {
- const result = await pool.query(
-        'DELETE FROM plants WHERE id_plantas = $1 RETURNING *',
-        
-        [id]
-    );
-    return result.rows[0];
+const remove = async (id) => {
+  const result = await pool.query(
+    'DELETE FROM plantas WHERE id_plantas = $1 RETURNING *',
+    [id]
+  );
+  return result.rows[0];
+};
+
+// Buscar planta pelo ID
+const getById = async (id) => {
+  const result = await pool.query(
+    'SELECT * FROM plantas WHERE id_plants = $1',
+    [id]
+  );
+
+  return result.rows[0];
 };
 
 export default {
-    getAll,
-    create,
-    remove
+  getAll,
+  create,
+  remove,
+  getById
 };
