@@ -62,7 +62,51 @@ const login = async (req, res) => {
   });
 };
 
+const update = async (req, res) => {
+  const {id} = req.params;
+  const {email, password} = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: 'Email e senha são obrigatótios'
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await userModel.update(
+    id,
+    email,
+    hashedPassword
+  );
+
+  if (!user) {
+    return res.status(400).json({
+      message: 'Usuário não encontrando'
+    });
+  }
+  res.json(user);
+};
+
+const remove = async (req, res) => {
+  const {id} = req.params;
+
+  const user = await userModel.remove(id);
+
+  if (!user) {
+    return res.status(404).json({
+      message: 'Usuário não encontrado'
+    });
+  }
+
+  res.json({
+    message: 'Usuário excluído com sucesso', user
+  });
+};
+
 export default {
   register,
-  login
+  login,
+  update,
+  remove
 };

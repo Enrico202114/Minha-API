@@ -20,7 +20,28 @@ const findByEmail = async (email) => {
   return result.rows[0];
 };
 
+const update = async (id, email, password) => {
+  const result = await pool.query(
+    `UPDATE usuarios SET  email = $1, password = $2
+    WHERE id_usuarios = $3 RETURNING id_usuarios, email`,
+    [email, password, id]
+  );
+
+  return result.rows[0];
+};
+
+const remove = async (id) => {
+  const result = await pool.query(
+    `DELETE FROM usuarios WHERE id_usuarios = $1
+    RETURNING id_usuarios, email`,
+    [id]
+  );
+  return result.rows[0];
+};
+
 export default {
   create,
-  findByEmail
+  findByEmail,
+  update,
+  remove
 };
